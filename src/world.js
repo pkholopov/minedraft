@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { BLOCK_TYPES, BLOCK_PROPERTIES, BLOCK_NAMES, BLOCK_FACES } from './blocks.js';
-import { createBlockMaterial, loadTexture } from './textures.js';
+import { createBlockMaterial, loadTexture, BASE } from './textures.js';
 
 const CHUNK_SIZE = 16;
 const CHUNK_HEIGHT = 64;
@@ -154,7 +154,7 @@ export class World {
     this._rebuildQueue = new Set();
 
     // Pre-load water texture for animation
-    this._waterTexture = loadTexture('/blocks/water_still.png');
+    this._waterTexture = loadTexture(`${BASE}blocks/water_still.png`);
   }
 
   chunkKey(cx, cz) {

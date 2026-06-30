@@ -1,6 +1,9 @@
 import * as THREE from 'three';
 import { BLOCK_TYPES, BLOCK_NAMES, BLOCK_FACES, BLOCK_PROPERTIES } from './blocks.js';
 
+// Base path for assets — used for GitHub Pages deployment (e.g. /minedraft/)
+export const BASE = import.meta.env.BASE_URL || '/';
+
 // Texture cache
 const textureCache = new Map();
 
@@ -31,7 +34,7 @@ function createFaceMaterial(faceConfig, transparent = false) {
   const textureName = typeof faceConfig === 'string' ? faceConfig : faceConfig.texture;
   const tintColor = typeof faceConfig === 'object' && faceConfig.color ? faceConfig.color : undefined;
 
-  const path = `/blocks/${textureName}.png`;
+  const path = `${BASE}blocks/${textureName}.png`;
   const map = loadTexture(path);
 
   // If this texture is animated, set up UV repeat on the texture itself
@@ -112,7 +115,7 @@ export function createBlockMaterial(blockType) {
       createFaceMaterial(faces.back, transparent),
     ];
   } else {
-    const path = `/blocks/${texName}.png`;
+    const path = `${BASE}blocks/${texName}.png`;
     const map = loadTexture(path);
     const materialOptions = { map, side: transparent ? THREE.DoubleSide : THREE.FrontSide };
     if (transparent) {
@@ -129,7 +132,7 @@ export function createBlockMaterial(blockType) {
 export function getBlockTexturePath(blockType) {
   const texName = BLOCK_NAMES[blockType];
   if (!texName) return null;
-  return `/blocks/${texName}.png`;
+  return `${BASE}blocks/${texName}.png`;
 }
 
 // Load a generic texture (for environment, items, etc.)

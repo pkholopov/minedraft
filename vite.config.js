@@ -3,6 +3,7 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   root: '.',
   publicDir: 'textures',
+  base: '/minedraft/',
   build: {
     outDir: 'dist',
   },

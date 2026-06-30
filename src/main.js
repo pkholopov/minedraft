@@ -12,6 +12,7 @@ const backgroundMusic = new THREE.Audio(audioListener);
 let musicPlaying = false;
 let musicLoaded = false;
 const musicBtn = document.getElementById('music-btn');
+const musicLoader = document.getElementById('music-loader');
 
 // Scene setup
 const scene = new THREE.Scene();
@@ -84,11 +85,10 @@ document.getElementById('start-btn').addEventListener('click', () => {
     player.position.set(spawnX + 0.5, height + 1, spawnZ + 0.5);
   }
 
-  document.getElementById('start-screen').style.display = 'none';
-  renderer.domElement.requestPointerLock();
-
-  // Start background music
+  // Start background music (показывает блокирующий лоадер поверх всего)
   loadMusic();
+
+  document.getElementById('start-screen').style.display = 'none';
 });
 
 function toggleMusic() {
@@ -117,6 +117,9 @@ document.addEventListener('keydown', (e) => {
 musicBtn.addEventListener('click', toggleMusic);
 
 function loadMusic() {
+  // Показываем блокирующий лоадер
+  musicLoader.classList.add('visible');
+
   // Resume AudioContext if suspended (required by browser autoplay policy)
   const ctx = THREE.AudioContext.getContext();
   if (ctx.state === 'suspended') {
@@ -133,11 +136,17 @@ function loadMusic() {
       musicPlaying = true;
       musicLoaded = true;
       musicBtn.textContent = '♫';
+      // Убираем лоадер и даём управление игроку
+      musicLoader.classList.remove('visible');
+      renderer.domElement.requestPointerLock();
       console.log('Music loaded and playing');
     },
     undefined,
     (err) => {
       console.error('Failed to load music:', err);
+      // При ошибке тоже убираем лоадер и даём управление
+      musicLoader.classList.remove('visible');
+      renderer.domElement.requestPointerLock();
     }
   );
 }

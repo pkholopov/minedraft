@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { loadGenericTexture } from './textures.js';
+import { loadGenericTexture, BASE } from './textures.js';
 
 const DAY_DURATION = 600; // seconds for full day/night cycle
 const SUN_ANGLE_SPEED = (2 * Math.PI) / DAY_DURATION;
@@ -11,7 +11,7 @@ export class DayNightCycle {
     this.clock = new THREE.Clock();
 
     // Sun
-    const sunTex = loadGenericTexture('/environment/sun.png');
+    const sunTex = loadGenericTexture(`${BASE}environment/sun.png`);
     const sunMat = new THREE.SpriteMaterial({
       map: sunTex,
       transparent: true,
@@ -25,7 +25,7 @@ export class DayNightCycle {
     this.scene.add(this.sun);
 
     // Moon
-    const moonTex = loadGenericTexture('/environment/full_moon.png');
+    const moonTex = loadGenericTexture(`${BASE}environment/full_moon.png`);
     const moonMat = new THREE.SpriteMaterial({
       map: moonTex,
       transparent: true,

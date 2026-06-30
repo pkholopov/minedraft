@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { BLOCK_TYPES, BLOCK_PROPERTIES, PLACEABLE_BLOCKS } from './blocks.js';
-import { getBlockTexturePath } from './textures.js';
+import { getBlockTexturePath, BASE } from './textures.js';
 
 const PLAYER_SPEED = 4.5;
 const SWIM_SPEED = 2.5;
@@ -202,11 +202,11 @@ export class Player {
     for (let i = 0; i < 10; i++) {
       const img = document.createElement('img');
       if (i < fullHearts) {
-        img.src = '/gui/heart/full.png';
+        img.src = `${BASE}gui/heart/full.png`;
       } else if (i === fullHearts && hasHalf) {
-        img.src = '/gui/heart/half.png';
+        img.src = `${BASE}gui/heart/half.png`;
       } else {
-        img.src = '/gui/heart/full.png';
+        img.src = `${BASE}gui/heart/full.png`;
         img.style.opacity = '0.2';
       }
       this.heartsEl.appendChild(img);
