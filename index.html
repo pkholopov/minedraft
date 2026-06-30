@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MineDraft</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { overflow: hidden; background: #000; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    canvas { display: block; }
+
+    /* Crosshair */
+    #crosshair {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 10;
+    }
+    #crosshair::before, #crosshair::after {
+      content: '';
+      position: absolute;
+      background: rgba(255,255,255,0.8);
+    }
+    #crosshair::before {
+      width: 2px;
+      height: 20px;
+      top: -10px;
+      left: -1px;
+    }
+    #crosshair::after {
+      width: 20px;
+      height: 2px;
+      top: -1px;
+      left: -10px;
+    }
+
+    /* Hotbar */
+    #hotbar {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 2px;
+      z-index: 20;
+      image-rendering: pixelated;
+    }
+    .hotbar-slot {
+      width: 60px;
+      height: 60px;
+      background: rgba(0,0,0,0.6);
+      border: 2px solid rgba(100,100,100,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      image-rendering: pixelated;
+    }
+    .hotbar-slot.selected {
+      border-color: #fff;
+      background: rgba(255,255,255,0.15);
+    }
+    .hotbar-slot img {
+      width: 40px;
+      height: 40px;
+      image-rendering: pixelated;
+    }
+    .hotbar-slot .slot-number {
+      position: absolute;
+      top: 2px;
+      left: 4px;
+      font-size: 10px;
+      color: rgba(255,255,255,0.6);
+      font-family: monospace;
+    }
+
+    /* Hearts */
+    #hearts {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      display: flex;
+      gap: 2px;
+      z-index: 20;
+      image-rendering: pixelated;
+    }
+    #hearts img {
+      width: 24px;
+      height: 24px;
+      image-rendering: pixelated;
+    }
+
+    /* Music toggle button */
+    #music-btn {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 30;
+      background: rgba(0,0,0,0.6);
+      border: 2px solid rgba(255,255,255,0.3);
+      color: white;
+      font-size: 22px;
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      user-select: none;
+      line-height: 1;
+    }
+    #music-btn:hover {
+      background: rgba(255,255,255,0.15);
+      border-color: rgba(255,255,255,0.6);
+    }
+    #music-btn.muted {
+      opacity: 0.5;
+    }
+
+    /* Block count */
+    #block-count {
+      position: fixed;
+      bottom: 90px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      font-family: monospace;
+      font-size: 14px;
+      z-index: 20;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+      pointer-events: none;
+    }
+
+    /* Target block coordinates */
+    #target-coords {
+      position: fixed;
+      bottom: 110px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #ff0;
+      font-family: monospace;
+      font-size: 16px;
+      z-index: 20;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+      pointer-events: none;
+      background: rgba(0,0,0,0.5);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    /* Start screen */
+    #start-screen {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      color: white;
+    }
+    #seed-input {
+      background: #2a2a2a;
+      border: 2px solid #555;
+      color: white;
+      padding: 10px 16px;
+      font-size: 16px;
+      font-family: monospace;
+      outline: none;
+      text-align: center;
+      margin-bottom: 20px;
+      width: 220px;
+      transition: border-color 0.2s;
+    }
+    #seed-input:focus {
+      border-color: #888;
+    }
+    #seed-input::placeholder {
+      color: #666;
+    }
+
+    #start-screen h1 {
+      font-size: 48px;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+      font-family: 'Segoe UI', sans-serif;
+      letter-spacing: 4px;
+    }
+    #start-screen p {
+      font-size: 16px;
+      color: #aaa;
+      margin-bottom: 30px;
+    }
+    #start-screen button {
+      padding: 14px 40px;
+      font-size: 18px;
+      background: #4a4a4a;
+      color: white;
+      border: 2px solid #888;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    #start-screen button:hover {
+      background: #6a6a6a;
+      border-color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <div id="start-screen">
+    <h1>MINEDRAFT</h1>
+    <p>Web-based Minecraft clone</p>
+    <input type="text" id="seed-input" placeholder="Seed (0 — случайный)" maxlength="20" />
+    <button id="start-btn">Играть</button>
+  </div>
+
+  <div id="crosshair"></div>
+
+  <div id="hearts"></div>
+
+  <div id="music-btn">♪</div>
+
+  <div id="hotbar"></div>
+  <div id="block-count"></div>
+  <div id="target-coords"></div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
