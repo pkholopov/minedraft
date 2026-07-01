@@ -7,11 +7,12 @@ const SUN_ANGLE_SPEED = (2 * Math.PI) / DAY_DURATION;
 export class DayNightCycle {
   constructor(scene) {
     this.scene = scene;
-    this.time = 0; // 0 = midnight, PI = noon
+    this.time = 1; // 0 = midnight, PI = noon
     this.clock = new THREE.Clock();
 
     // Sun
     const sunTex = loadGenericTexture(`${BASE}environment/sun.png`);
+    sunTex.colorSpace = THREE.SRGBColorSpace;
     const sunMat = new THREE.SpriteMaterial({
       map: sunTex,
       transparent: true,
@@ -20,12 +21,13 @@ export class DayNightCycle {
       fog: false,
     });
     this.sun = new THREE.Sprite(sunMat);
-    this.sun.scale.set(30, 30, 1);
+    this.sun.scale.set(50, 50, 1);
     this.sun.position.set(0, 100, 0);
     this.scene.add(this.sun);
 
     // Moon
     const moonTex = loadGenericTexture(`${BASE}environment/full_moon.png`);
+    moonTex.colorSpace = THREE.SRGBColorSpace;
     const moonMat = new THREE.SpriteMaterial({
       map: moonTex,
       transparent: true,
@@ -34,7 +36,7 @@ export class DayNightCycle {
       fog: false,
     });
     this.moon = new THREE.Sprite(moonMat);
-    this.moon.scale.set(25, 25, 1);
+    this.moon.scale.set(45, 45, 1);
     this.moon.position.set(0, -100, 0);
     this.scene.add(this.moon);
 

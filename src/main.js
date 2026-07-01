@@ -127,7 +127,7 @@ function loadMusic() {
   }
 
   audioLoader.load(
-    'audio/forest.mp3',
+    'audio/echoes.ogg',
     (buffer) => {
       backgroundMusic.setBuffer(buffer);
       backgroundMusic.setLoop(true);
